@@ -1,11 +1,16 @@
 from flask import Flask, render_template, session, redirect
-
+import pickle
 from extensions import db, sess
 from models import User
 from routes import api
+import jinja2
 
 
 app = Flask(__name__)
+
+with open("models/feature_names.pkl", "rb") as f:
+    feature_names = pickle.load(f)
+
 
 app.config["SECRET_KEY"] = "dev-secret"
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///app.db"
@@ -26,7 +31,7 @@ with app.app_context():
 def home():
     username = session.get("user",None)
     if username is not None:
-        return render_template("app.html")
+        return render_template("app.html",FEATURES=feature_names)
     return render_template("auth.html")
 
 @app.route('/dashboard', methods=['GET'])
@@ -35,7 +40,6 @@ def dashboard():
     if username is not None:
         return render_template("dashboard.html", user=User.get_by_username(username))
     return redirect("/")
-
 
 if __name__ == "__main__":
     app.run(host="127.0.0.1", port=5000, debug=True)

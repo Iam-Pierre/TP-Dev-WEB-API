@@ -4,10 +4,46 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>App</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styleApp.css') }}" />
     <script src="{{ url_for('static', filename='js/app.js') }}" defer></script>
 </head>
 <body>
+    <header>
+            <h2>Prédiction du diabète</h2>
+            <p>TP -Flask</p>  
+           
+    </header>
+    <main>
+        <article>
+            <form id="formulaire">
+            <div class="form-row">
+                <div class="formulaire"></div>
+                    
+                    <div class="input-group">
+                        <h2>Entrer les informations médicales</h2>
+                        {% for feature in FEATURES %}   
+                            <label for="{{ feature }}">{{ feature }}</label>
+                            <input type="text" name="{{ feature }}" id="{{ feature }}">
+                        {% endfor %}
+                        <button type="submit">Probabilité d'être diabétique</button>
+                        <button type="button" id="logout">Se déconnecter</button>
 
+                    </div>
+                </div> 
+
+        </form>
+        <div>
+            <button type="button" id="show" style="display: none">Afficher les résultats</button>
+        </div>
+<div id="result">
+    <div class="progressbar">
+        <div id='prediction'>
+        </div>
+
+    </div>
+
+    </main>
+    <footer>
+        <p> Pierre 2002-2026 </p>
+    </footer>
 </body>
-</html>

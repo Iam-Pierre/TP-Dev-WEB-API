@@ -1,4 +1,4 @@
-from flask import Blueprint, request, session, g
+from flask import Blueprint, request, session, g, render_template, redirect
 from werkzeug.security import generate_password_hash, check_password_hash
 
 from extensions import db
@@ -65,25 +65,53 @@ def auth_required(f):
 #######################
 
 @api.route("/api/login", methods=["POST"])
-def login():
-    #a vous d'ecrire le code
-    return {"error": "non implementer"}, 501
+def handleLogin():
+    data = request.get_json()
+
+    u = data.get("username", None)
+    p = data.get("password", None)
+
+    user = User.get_by_username(u)
+
+    if user is None:
+        return {"error": "utilisateur ou mot de passe incorrect"}, 401
+    
+    if not check_password_hash(user.password_hash,p):
+        return {"error": "utilisateur ou mot de passe incorrect"}, 401
+    
+    session["user"] = u 
+    return {"ok": True}
 
 
 @api.route("/api/register", methods=["POST"])
-def register():
-    #a vous d'ecrire le code
-    return {"error": "non implementer"}, 501
+def handleRegister():
+    data = request.get_json()
 
+    u = data.get("username","")
+    p = data.get("password","")
+
+    if User.get_by_username(u) is not None:
+        return {"error": "Nom d'utilisateur déja pris"}, 400
+    
+    new_user = User(username = u, password_hash = generate_password_hash(p))
+    db.session.add(new_user)
+    db.session.commit()
+
+    session["user"] = u
+    return {"ok": True}
+
+    
 @api.route("/api/logout", methods=["GET"])
 @login_required
-def logout():
+def handleLogout():
     session.clear()
     return {"ok": True}
 
 ###########################
 ##### ROUTE DASHBOARD #####
 ###########################
+
+
 
 @api.route("/api/keys/<int:key_id>", methods=["DELETE"])
 @login_required
@@ -110,14 +138,14 @@ def create_key():
 #### ROUTE APP #####
 ####################
 
-@api.route("/api/predict", methods=["POST"])
-@auth_required
-def predict():
-    #la fonction predict de votre TP
-    return {"error": "non implementer"}, 501
+# @api.route("/api/predict", methods=["POST"])
+# @auth_required
+# def predict():
+#     #la fonction predict de votre TP
+#     return {"error": "non implementer"}, 501
 
-@api.route("/api/waterfall", methods=["GET"])
-@auth_required
-def waterfall():
-    #la fonction waterfall de votre TP
-    return {"error": "non implementer"}, 501
+# @api.route("/api/waterfall", methods=["GET"])
+# @auth_required
+# def waterfall():
+#     #la fonction waterfall de votre TP
+#     return {"error": "non implementer"}, 501

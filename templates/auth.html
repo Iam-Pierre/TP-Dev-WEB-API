@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="fr"> 
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -8,6 +8,46 @@
     <script src="{{ url_for('static', filename='js/auth.js') }}" defer></script>
 </head>
 <body>
+    <header>
+        <h2>Page de login</h2>
+        <p>TP API</p>
+    </header>
+    <main>
+        <article>
+            <div class="input-group">
 
+                <!-- LOGIN -->
+                <div id="loginfields">
+                    <form id="formulaireLogin">
+                        <h2>Entrez vos informations pour se connecter</h2>
+                        <label for="username">Nom d'utilisateur</label>
+                        <input type="text" id="username">
+                        <label for="password">Mot de passe</label>
+                        <input type="password" id="password">
+                        <button type="submit">Se connecter</button>
+                    </form>
+                    <button type="button" id="btnShowRegister">Pas de compte ? S'inscrire</button>
+                </div>
+
+                <!-- REGISTER -->
+                <div id="registerfields" style="display:none">
+                    <form id="formulaireRegister">
+                        <h2>Entrez vos informations pour vous inscrire</h2>
+                        <label for="usernameRegister">Nom d'utilisateur</label>
+                        <input type="text" id="usernameRegister">
+                        <label for="passwordRegister">Mot de passe</label>
+                        <input type="password" id="passwordRegister">
+                        <button type="submit">S'inscrire</button>
+                    </form>
+                    <button type="button" id="btnShowLogin">Déjà un compte ? Se connecter</button>
+                </div>
+
+
+            </div>
+        </article>
+    </main>
+    <footer>
+        <p>Pierre 2002-2026</p>
+    </footer>
 </body>
 </html>
