@@ -116,8 +116,11 @@ def handleLogout():
 @api.route("/api/keys/<int:key_id>", methods=["DELETE"])
 @login_required
 def delete_key(key_id):
-    data = request.get_json()
+    key = ApiKey.query.filter_by(id=key_id, user_id=g.user.id).first()
 
+    db.session.delete(key)
+    db.session.commit()
+    return {"ok": True}
 
 
 @api.route("/api/keys", methods=["POST"])
@@ -131,6 +134,8 @@ def create_key():
         u = g.user
 
         raw_key, api_key = ApiKey.new(u,a)
+        g.user.consume_quota()
+
 
         # print([key.label for key in g.user.api_keys]) Utilise pour lire les clé de l'utilisateur dans la console
 
