@@ -3,7 +3,6 @@ import pickle
 from extensions import db, sess
 from models import User
 from routes import api
-import jinja2
 
 
 app = Flask(__name__)
@@ -38,8 +37,11 @@ def home():
 def dashboard():
     username = session.get("user",None)
     if username is not None:
-        return render_template("dashboard.html", user=User.get_by_username(username))
+        user = User.get_by_username(username)
+        return render_template("dashboard.html", user=user, KEY=user.api_keys) #username est la variable qu'on récupere depuis la session
+    # pour récupérer la liste de clé on utilise le nom.api_keys, pareil pour user on peut récupérer le nom de l'utilisateur de la session
     return redirect("/")
+
 
 if __name__ == "__main__":
     app.run(host="127.0.0.1", port=5000, debug=True)

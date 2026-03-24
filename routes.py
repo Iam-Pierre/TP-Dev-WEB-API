@@ -101,7 +101,7 @@ def handleRegister():
     return {"ok": True}
 
     
-@api.route("/api/logout", methods=["GET"])
+@api.route("/api/logout", methods=["POST"])
 @login_required
 def handleLogout():
     session.clear()
@@ -116,21 +116,32 @@ def handleLogout():
 @api.route("/api/keys/<int:key_id>", methods=["DELETE"])
 @login_required
 def delete_key(key_id):
-    """
-    supprime la clé API spécifiée (si elle appartient à l'utilisateur connecté)
-    """
-    #a vous d'ecrire le code
-    return {"error": "non implementer"}, 501
+    data = request.get_json()
+
+
 
 @api.route("/api/keys", methods=["POST"])
 @login_required
 def create_key():
-    """
-    crée une nouvelle clé API pour l'utilisateur connecté avec un label spécifié
-    retourne la clé API générée
-    """
-    #a vous d'ecrire le code
-    return {"error": "non implementer"}, 501
+
+    try:
+        data = request.get_json()
+
+        a = data.get("apiName","")
+        u = g.user
+
+        raw_key, api_key = ApiKey.new(u,a)
+
+        # print([key.label for key in g.user.api_keys]) Utilise pour lire les clé de l'utilisateur dans la console
+
+        return {"raw_key": raw_key, "id": api_key.id, "label": api_key.label}
+    except:
+        return {"error": "Erreur clé API non créée"}, 403
+    
+
+    
+
+
 
 
 
@@ -149,3 +160,4 @@ def create_key():
 # def waterfall():
 #     #la fonction waterfall de votre TP
 #     return {"error": "non implementer"}, 501
+

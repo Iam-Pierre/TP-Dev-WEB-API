@@ -4,10 +4,49 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>App</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styleDashboard.css') }}" />
     <script src="{{ url_for('static', filename='js/dashboard.js') }}" defer></script>
 </head>
-<body>
 
+<body>
+    <header>
+        <h2>Dashboard</h2>
+    </header>
+
+    <main>
+        <article>
+            <form id="formulaire">
+                <div class="form-row">
+                    <div class="input-group">
+                        <h2>Bienvenue, {{ user.username }}!</h2>
+                        <h4>Dashboard utilisateur</h4>
+                        <h3>Entrée le nom de la clé API</h3>
+                        <label for="api_key_name">Nom de la clé API</label>
+                        <input type="text" name="api_key_name" id="api_key_name">
+                        <button type="button" id="create_api">Générer une nouvelle clé API</button>
+                        <ul id="listkey">
+                            {% for key in KEY %}
+                            <li for= "{{key}}">{{key.label}}<button>Delete</button></li>
+                            {% endfor %}
+                        </ul>
+                        <button type="button" id="logout">
+                            Se déconnecter
+                        </button>
+                    </div>
+                </div>
+            </form>
+
+            <div>
+                <button type="button" id="show" style="display: none">
+                    Afficher les résultats
+                </button>
+            </div>
+        </article>
+    </main>
+
+    <footer>
+        <p>Pierre 2002-2026</p>
+    </footer>
 </body>
 </html>
