@@ -1,14 +1,13 @@
 from flask import Flask, render_template, session, redirect
-import pickle
 from extensions import db, sess
 from models import User
 from routes import api
+from models_ml import rf_model, feature_names, shap_explainer
 
 
 app = Flask(__name__)
 
-with open("models/feature_names.pkl", "rb") as f:
-    feature_names = pickle.load(f)
+
 
 
 app.config["SECRET_KEY"] = "dev-secret"
@@ -30,7 +29,8 @@ with app.app_context():
 def home():
     username = session.get("user",None)
     if username is not None:
-        return render_template("app.html",FEATURES=feature_names)
+        return render_template("app.html",FEATURES=feature_names,predict=rf_model.predict_proba([[0]*len(feature_names)])[0][1]
+                               )
     return render_template("auth.html")
 
 @app.route('/dashboard', methods=['GET'])

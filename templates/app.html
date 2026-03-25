@@ -9,41 +9,44 @@
 </head>
 <body>
     <header>
-            <h2>Prédiction du diabète</h2>
-            <p>TP -Flask</p>  
-           
+        <h2>Prédiction du diabète</h2>
+        <p>TP - Flask</p>
     </header>
     <main>
         <article>
             <form id="formulaire">
-            <div class="form-row">
-                <div class="formulaire"></div>
-                    
+                <div class="form-row">
                     <div class="input-group">
                         <h2>Entrer les informations médicales</h2>
-                        {% for feature in FEATURES %}   
+                        {% for feature in FEATURES %}
                             <label for="{{ feature }}">{{ feature }}</label>
                             <input type="text" name="{{ feature }}" id="{{ feature }}">
                         {% endfor %}
                         <button type="submit">Probabilité d'être diabétique</button>
                         <button type="button" id="dashboard">Dashboard</button>
-
                     </div>
-                </div> 
+                </div>
+            </form>
 
-        </form>
-        <div>
-            <button type="button" id="show" style="display: none">Afficher les résultats</button>
-        </div>
-<div id="result">
-    <div class="progressbar">
-        <div id='prediction'>
-        </div>
-
-    </div>
-
+            <div class="input-group" id="resultats" style="display:none">
+                <div class="buttonToGether">
+                    <button type="button" id="backForm">Revenir au formulaire</button>
+                    <button type="button" id="explication">Explication</button>
+                </div>
+                <h3>Résultats</h3>
+                <p>Probabilité d'être diabétique</p>
+                <div id="progressbar">
+                    <div id="myBar">{{ (predict * 100)|round(1) }}%</div>
+                </div>
+                <div id="shapValues" style="display:none">
+                    <h3>Explication SHAP</h3>
+                    <img id="waterfall" src="" style="display:none; max-width:100%;">
+                </div>
+            </div>
+        </article>
     </main>
     <footer>
-        <p> Pierre 2002-2026 </p>
+        <p>Pierre 2002-2026</p>
     </footer>
 </body>
+</html>

@@ -1,8 +1,13 @@
+from pyexpat import features
+
 from flask import Blueprint, request, session, g, render_template, redirect
 from werkzeug.security import generate_password_hash, check_password_hash
+import pickle
 
 from extensions import db
 from models import User, ApiKey
+
+from models_ml import rf_model, feature_names, shap_explainer
 
 
 api = Blueprint("api", __name__)
@@ -143,26 +148,43 @@ def create_key():
     except:
         return {"error": "Erreur clé API non créée"}, 403
     
-
-    
-
-
-
-
-
 ####################
 #### ROUTE APP #####
 ####################
 
-# @api.route("/api/predict", methods=["POST"])
-# @auth_required
-# def predict():
-#     #la fonction predict de votre TP
-#     return {"error": "non implementer"}, 501
+@api.route("/api/predict", methods=["POST"])
+@auth_required
+def predict():
+    data = request.get_json()
+    features = [float(data[f]) for f in feature_names]
+    prediction = rf_model.predict_proba([features])[0][1]
+    return {"proba": prediction}
 
-# @api.route("/api/waterfall", methods=["GET"])
-# @auth_required
-# def waterfall():
-#     #la fonction waterfall de votre TP
-#     return {"error": "non implementer"}, 501
+@api.route("/api/waterfall", methods=["GET"])
+@auth_required
+def waterfall():
+    import shap
+    import matplotlib.pyplot as plt
+    from io import BytesIO
+    from flask import send_file
+    import numpy as np
+
+    features = np.array([[float(request.args.get(f)) for f in feature_names]])
+    shap_values = shap_explainer.shap_values(features)
+    
+    explanation = shap.Explanation(
+        values=shap_values[0][0],
+        base_values=float(shap_explainer.expected_value[0]),
+        data=features[0],
+        feature_names=feature_names
+    )
+    
+    shap.plots.waterfall(explanation, max_display=len(feature_names), show=False)
+    
+    buf = BytesIO()
+    plt.savefig(buf, format="png", bbox_inches="tight")
+    plt.close()
+    buf.seek(0)
+    
+    return send_file(buf, mimetype="image/png")
 
