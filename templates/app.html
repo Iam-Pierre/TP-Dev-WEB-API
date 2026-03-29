@@ -3,8 +3,8 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>App</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/styleApp.css') }}" />
+    <title>Prédiction</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
     <script src="{{ url_for('static', filename='js/app.js') }}" defer></script>
 </head>
 <body>
@@ -12,39 +12,51 @@
         <h2>Prédiction du diabète</h2>
         <p>TP - Flask</p>
     </header>
+
     <main>
         <article>
+
+            <!-- FORMULAIRE -->
             <form id="formulaire">
-                <div class="form-row">
-                    <div class="input-group">
-                        <h2>Entrer les informations médicales</h2>
-                        {% for feature in FEATURES %}
-                            <label for="{{ feature }}">{{ feature }}</label>
-                            <input type="text" name="{{ feature }}" id="{{ feature }}">
-                        {% endfor %}
-                        <button type="submit">Probabilité d'être diabétique</button>
-                        <button type="button" id="dashboard">Dashboard</button>
+                <div class="card">
+                    <h2>Informations médicales</h2>
+                    {% for feature in FEATURES %}
+                        <label for="{{ feature }}">{{ feature }}</label>
+                        <input type="text" name="{{ feature }}" id="{{ feature }}">
+                    {% endfor %}
+                    <div class="btn-group">
+                        <button type="submit">Calculer la probabilité</button>
+                        <button type="button" class="secondary" id="dashboard">Dashboard</button>
                     </div>
                 </div>
             </form>
 
-            <div class="input-group" id="resultats" style="display:none">
-                <div class="buttonToGether">
-                    <button type="button" id="backForm">Revenir au formulaire</button>
-                    <button type="button" id="explication">Explication</button>
+            <!-- RÉSULTATS -->
+            <div id="resultats" style="display:none">
+                <div class="card">
+                    <h3>Résultats</h3>
+                    <p>Probabilité d'être diabétique</p>
+                    <div id="progressbar">
+                        <div id="myBar">0%</div>
+                    </div>
+                    <div class="btn-group">
+                        <button type="button" id="backForm" class="secondary">Revenir au formulaire</button>
+                        <button type="button" id="explication">Voir l'explication SHAP</button>
+                    </div>
                 </div>
-                <h3>Résultats</h3>
-                <p>Probabilité d'être diabétique</p>
-                <div id="progressbar">
-                    <div id="myBar">{{ (predict * 100)|round(1) }}%</div>
-                </div>
+
+                <!-- SHAP -->
                 <div id="shapValues" style="display:none">
-                    <h3>Explication SHAP</h3>
-                    <img id="waterfall" src="" style="display:none; max-width:100%;">
+                    <div class="card">
+                        <h3>Explication SHAP</h3>
+                        <img id="waterfall" src="" style="max-width:100%;">
+                    </div>
                 </div>
             </div>
+
         </article>
     </main>
+
     <footer>
         <p>Pierre 2002-2026</p>
     </footer>

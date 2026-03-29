@@ -3,61 +3,52 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>App</title>
-
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/styleDashboard.css') }}" />
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
     <script src="{{ url_for('static', filename='js/dashboard.js') }}" defer></script>
 </head>
-
 <body>
     <header>
         <h2>Dashboard</h2>
+        <p>Bienvenue, {{ user.username }} !</p>
     </header>
 
     <main>
         <article>
-            <form id="formulaire">
-                <div class="form-row">
-                    <div class="input-group">
-                        <h2>Bienvenue, {{ user.username }}!</h2>
-                        <h4>Dashboard utilisateur</h4>
-                        <h3>Entrée le nom de la clé API</h3>
-                        <label for="api_key_name">Nom de la clé API</label>
-                        <input type="text" name="api_key_name" id="api_key_name">
-                        <button type="button" id="create_api">Générer une nouvelle clé API</button>
-                        <div id="raw_key" style="display: none;" >
-                            <p>Copiez cette clé maintenant : elle ne sera plus affichée ensuite</p>
-                            <label style="background-color: yellow;"></label>
-                        </div>
-                        <ul id="listkey">
+            <div class="row">
 
-                            {% for key in KEY %}
-
-                            <li>{{key.label}}<button data-id-key="{{ key.id }}" >Delete </button> </li>
-
-                            {% endfor %}
-                        </ul>
-                        <button type="button" id="logout">
-                            Se déconnecter
-                        </button>
-                    </div>
-                    <div class="input-group">
-                        
-                        
-
-                        <h3>Quota</h3>
-                        <p>Quota actuel : {{ user.quota_used }}</p>
-                        <p>Maximum : {{ user.quota_max }}</p>
-                        <p>Quota restant : {{ user.quota_max - user.quota_used }}</p>
-
-                    </div>
+                <!-- QUOTA -->
+                <div class="card">
+                    <h3>Quota</h3>
+                    <p>Utilisé : {{ user.quota_used }}</p>
+                    <p>Maximum : {{ user.quota_max }}</p>
+                    <p>Restant : {{ user.quota_max - user.quota_used }}</p>
                 </div>
-            </form>
 
-            <div>
-                <button type="button" id="show" style="display: none">
-                    Afficher les résultats
-                </button>
+                <!-- CLÉS API -->
+                <div class="card">
+                    <h3>Clés API</h3>
+                    <label for="api_key_name">Nom de la clé</label>
+                    <input type="text" id="api_key_name" placeholder="ex: script python">
+                    <button type="button" id="create_api">Créer une clé</button>
+
+                    <div id="raw_key" style="display:none">
+                        <p>Copiez cette clé maintenant : elle ne sera plus affichée ensuite.</p>
+                        <label></label>
+                    </div>
+
+                    <ul id="listkey">
+                        {% for key in KEY %}
+                        <li>
+                            {{ key.label }}
+                            <button class="danger" data-id-key="{{ key.id }}">Supprimer</button>
+                        </li>
+                        {% endfor %}
+                    </ul>
+
+                    <button type="button" class="secondary" id="logout">Se déconnecter</button>
+                </div>
+
             </div>
         </article>
     </main>
